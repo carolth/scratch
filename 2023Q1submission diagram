@@ -1,0 +1,81 @@
+@startuml
+start
+: Quarterly data\ndeposit is ready?; 
+
+
+if (project is already registered?) then (no)
+  :[[https://bcdc.ingest.brain.allentech.org/ BCDC\nProject Registration]];
+
+else (yes)
+
+switch(select archive based on data type)
+
+case(neurophysiology data) 
+
+partition DANDI Pathway{
+: [[https://dandiarchive.org/ DANDI submission]];
+: BCDC: specimen import \nfrom DANDI API; 
+}
+
+case (image data) 
+partition BIL Pathway{
+: [[http://www.brainimagelibrary.org/ BIL submission]];
+: BCDC Specimen \nRegistration with template;
+}
+
+case (omics data) 
+partition NeMO Pathway{
+
+: [[https://nemoarchive.org/ NeMO submission]];
+: BCDC Specimen \nRegistration with template;
+}
+
+case (xray tomography) 
+partition BossDB pathway{
+: [[https://bossdb.org/ BossDB]];
+: Specimen ingest TBD;
+}
+
+case (MRI data) 
+partition MRI Pathway{
+
+: consult;
+: DANDI or OpenNeuro;
+
+}
+
+
+
+
+case (spatial transcriptomics data) 
+partition Spatial Tx Data{
+if (raw) 
+: [[http://www.brainimagelibrary.org/ BIL]];
+elseif (cellxgene)
+: [[https://nemoarchive.org/ NeMO]];
+endif
+}
+
+case (patch-seq) 
+partition patch-seq {
+if(morphology) then 
+: [[http://www.brainimagelibrary.org/ BIL]];
+elseif (ephys) 
+: [[https://dandiarchive.org/ DANDI]];
+elseif (omics)
+:[[https://nemoarchive.org/ NeMO]];
+
+endif
+}
+
+endswitch
+stop
+
+
+
+
+
+endif 
+
+stop
+@enduml
